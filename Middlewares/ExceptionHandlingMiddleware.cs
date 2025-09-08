@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace AuthProject.WebApi.Middlewares
+namespace Common.Middlewares
 {
     public class ExceptionHandlingMiddleware
     {
