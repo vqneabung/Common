@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
 
-namespace AuthProject.Infrastructure.Data
+namespace Common.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
