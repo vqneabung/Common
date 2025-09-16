@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace PRN232.Lab1.CoffeeStore.API.Extensions
+namespace Common.Extensions
 {
     public class BaseActionResult<TData> : IConvertToActionResult
     {

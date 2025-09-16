@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace PRN232.Lab1.CofeeStore.API.Extensions
+namespace Common.Extensions
 {
     public class ControllerBaseWithBaseReponse : ControllerBase
     {
