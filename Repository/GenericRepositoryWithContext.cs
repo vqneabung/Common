@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using PRN232.Lab1.CoffeeStore.Core.Interface;
 using System.Linq.Expressions;
 
-namespace PRN232.Lab1.CoffeeStore.Data.Repositories
+namespace Common.Repository
 {
     public class GenericRepositoryWithContext<TContext, TEntity> : IGenericRepository<TEntity> where TContext : DbContext where TEntity : class
     {
