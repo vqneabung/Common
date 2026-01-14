@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Common.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Common.Repository
 {
@@ -24,6 +26,8 @@ namespace Common.Repository
             int? take = null)
         {
             IQueryable<TEntity> query = _dbSet;
+
+            query = await IsActiveQuery(query);
 
             if (filter is not null)
                 query = query.Where(filter);
@@ -56,6 +60,8 @@ namespace Common.Repository
         {
             IQueryable<TEntity> query = _dbSet;
 
+            query = await IsActiveQuery(query);
+
             if (filter is not null)
                 query = query.Where(filter);
 
@@ -84,6 +90,8 @@ namespace Common.Repository
             bool asNoTracking = false)
         {
             IQueryable<TEntity> query = _dbSet;
+
+            query = await IsActiveQuery(query);
 
             if (include is not null)
                 query = include(query);
@@ -128,6 +136,8 @@ namespace Common.Repository
         {
             IQueryable<TEntity> query = _dbSet;
 
+            query = await IsActiveQuery(query);
+
             if (filter is not null)
                 query = query.Where(filter);
 
@@ -136,7 +146,55 @@ namespace Common.Repository
 
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _dbSet.AnyAsync(predicate);
+            IQueryable<TEntity> query = _dbSet;
+
+            query = await IsActiveQuery(query);
+
+            return await query.AnyAsync(predicate);
+        }
+
+        public async Task<bool> SoftRemove(TEntity entity)
+        {
+            IQueryable<TEntity> query = _dbSet;
+
+            query = await IsActiveQuery(query);
+
+            if (entity is CommonEntity commonEntity)
+            {
+                commonEntity.IsActive = false;
+                _dbSet.Update(entity);
+                return await SaveChangesAsync();
+            }
+
+            return false;
+
+        }
+
+        public async Task<IQueryable<TEntity>> IsActiveQuery(IQueryable<TEntity> query)
+        {
+            // Check if TEntity inherits from CommonEntity
+            Type type = typeof(TEntity);
+            Type extType = typeof(CommonEntity);
+
+            // If it does, apply the IsActive filter
+            if (type.IsAssignableFrom(extType))
+            {
+                // Use reflection to get the IsActive property
+                var prop = type.GetProperty("IsActive");
+
+                // If the property exists and is of type bool, apply the filter
+                if (prop != null && prop.PropertyType == typeof(bool))
+                {
+                    // Apply the IsActive filter
+                    //query = query.Where(e => (bool)prop.GetValue(e)!);
+                    //query = query.Where(e => (e as CommonEntity)!.IsActive == true);
+                    query = query.Where(e => EF.Property<bool>(e, "IsActive") == true);
+                    return query;
+
+                }
+            }
+            return query;
+
         }
     }
 }
