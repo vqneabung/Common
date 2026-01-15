@@ -196,5 +196,35 @@ namespace Common.Repository
             return query;
 
         }
+
+        public async Task<bool> AddAsyncWithSave(TEntity entity)
+        {
+           await _dbSet.AddAsync(entity);
+           return await SaveChangesAsync();
+        }
+
+        public async Task<bool> AddRangeAsyncWithSave(IEnumerable<TEntity> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+            return await SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateAsyncWithSave(TEntity entity)
+        {
+            await Task.Run(() => _dbSet.Update(entity));
+            return await SaveChangesAsync();
+        }
+
+        public async Task<bool> RemoveAsyncWithSave(TEntity entity)
+        {
+            await Task.Run(() => _dbSet.Remove(entity));
+            return await SaveChangesAsync();
+        }
+
+        public async Task<bool> RemoveRangeAsyncWithSave(IEnumerable<TEntity> entities)
+        {
+            await Task.Run(() => _dbSet.RemoveRange(entities));
+            return await SaveChangesAsync();
+        }
     }
 }

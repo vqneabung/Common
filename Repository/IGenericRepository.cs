@@ -35,12 +35,28 @@ namespace Common.Repository
         );
 
         Task<int> CountAsync(Expression<Func<T, bool>>? filter = null);
+
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+
         Task AddAsync(T entity);
+
+        Task<bool> AddAsyncWithSave(T entity);
+
         Task AddRangeAsync(IEnumerable<T> entities);
+
+        Task<bool> AddRangeAsyncWithSave(IEnumerable<T> entities);
+
         void Update(T entity);
+
+        Task<bool> UpdateAsyncWithSave(T entity);
+
         void Remove(T entity);
+
+        Task<bool> RemoveAsyncWithSave(T entity);
+
         void RemoveRange(IEnumerable<T> entities);
+
+        Task<bool> RemoveRangeAsyncWithSave(IEnumerable<T> entities);
 
         Task<bool> SoftRemove(T entity);
 
